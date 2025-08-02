@@ -1,11 +1,7 @@
-import os
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 import requests
 from pydantic import BaseModel
-from dotenv import load_dotenv
-
-load_dotenv()
 
 app = FastAPI()
 
@@ -18,7 +14,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-API_TOKEN = os.getenv("TLDW_API_TOKEN")
+API_TOKEN = "71c6a876f9a6bcbe83b3a3f1a43466d83d3074d194064e9eb2fbc7dd2f6b5bac"
 API_BASE_URL = "https://api.trytldw.ai/v1"
 
 class MediaRequest(BaseModel):
@@ -26,8 +22,6 @@ class MediaRequest(BaseModel):
 
 @app.post("/api/embed")
 async def embed_video(media_request: MediaRequest):
-    if not API_TOKEN:
-        raise HTTPException(status_code=500, detail="TLDW_API_TOKEN not set in .env file")
 
     headers = {
         "Authorization": f"Bearer {API_TOKEN}",
@@ -56,8 +50,6 @@ class StatusRequest(BaseModel):
 
 @app.get("/api/media/{media_id}")
 async def get_media_status(media_id: str):
-    if not API_TOKEN:
-        raise HTTPException(status_code=500, detail="TLDW_API_TOKEN not set in .env file")
 
     headers = {
         "Authorization": f"Bearer {API_TOKEN}",
